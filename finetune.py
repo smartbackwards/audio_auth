@@ -200,7 +200,8 @@ def main():
         train_set     = train_loader,
         valid_set     = valid_loader,
     )
-
+    brain.modules.encoder.eval()
+    torch.save(brain.modules.encoder.state_dict(), "finetuned_encoder.pt")
     print(f"\n[finetune] Done. Best checkpoint saved to: {hparams['save_folder']}")
     print("Next step: run enroll.py to build your speaker database.")
 
