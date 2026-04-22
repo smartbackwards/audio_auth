@@ -1,0 +1,94 @@
+# finetune.yaml
+# SpeechBrain ECAPA-TDNN fine-tuning config for speaker verification
+# Run via: python finetune.py finetune.yaml
+
+# ── Paths (edit these) ─────────────────────────────────────────────────────────
+output_folder: !ref results/ecapa_finetuned
+save_folder:   !ref <output_folder>/save
+train_log:     !ref <output_folder>/train_log.txt
+
+train_csv: data/train.csv
+valid_csv: data/val.csv
+
+# ── Training hyperparameters ───────────────────────────────────────────────────
+seed: 42
+__set_seed: !apply:torch.manual_seed [!ref <seed>]
+
+number_of_epochs: 10
+batch_size: 32
+lr: 0.0001
+lr_final: 0.00001
+
+# Gradient clipping
+max_grad_norm: 5.0
+
+# ── Data ───────────────────────────────────────────────────────────────────────
+sample_rate: 16000
+sentence_len: 3.0   # seconds per training chunk
+shuffle: True
+
+# ── Augmentation ──────────────────────────────────────────────────────────────
+# Applied during training only — helps generalisation
+drop_freq_low:  0
+drop_freq_high: 1
+drop_chunk_count_low:  0
+drop_chunk_count_high: 5
+drop_chunk_length_low:  1000
+drop_chunk_length_high: 2000
+
+# ── Model ─────────────────────────────────────────────────────────────────────
+# Pretrained checkpoint from SpeechBrain HuggingFace hub
+pretrained_path: speechbrain/spkrec-ecapa-voxceleb
+
+emb_dim: 192   # ECAPA-TDNN embedding size
+
+encoder: !new:speechbrain.lobes.models.ECAPA_TDNN.ECAPA_TDNN
+  input_size: 80
+  channels: [1024, 1024, 1024, 1024, 3072]
+  kernel_sizes: [5, 3, 3, 3, 1]
+  dilations: [1, 2, 3, 4, 1]
+  attention_channels: 128
+  lin_neurons: !ref <emb_dim>
+
+# AAM-Softmax loss (similar to ArcFace, required by spec)
+# n_out is set dynamically in finetune.py based on number of training speakers
+classifier: !new:speechbrain.nnet.losses.LogSoftmaxWrapper
+  loss_fn: !new:speechbrain.nnet.losses.AdditiveAngularMargin
+    margin: 0.2
+    scale: 30
+
+# Feature extraction — 80-dim Fbank, matches VoxCeleb pretraining
+compute_features: !new:speechbrain.lobes.features.Fbank
+  n_mels: 80
+
+mean_var_norm: !new:speechbrain.processing.features.InputNormalization
+  norm_type: sentence
+  std_norm: False
+
+# ── Optimiser & scheduler ─────────────────────────────────────────────────────
+opt_class: !name:torch.optim.Adam
+  lr: !ref <lr>
+  weight_decay: 0.000002
+
+lr_scheduler: !new:speechbrain.nnet.schedulers.CyclicCosineScheduler
+  lr_initial: !ref <lr>
+  n_warmup_steps: 1000
+
+# ── Checkpointing ─────────────────────────────────────────────────────────────
+checkpointer: !new:speechbrain.utils.checkpoints.Checkpointer
+  checkpoints_dir: !ref <save_folder>
+  recoverables:
+    embedding_model: !ref <encoder>
+    normalizer: !ref <mean_var_norm>
+    counter: !ref <epoch_counter>
+
+epoch_counter: !new:speechbrain.utils.epoch_loop.EpochCounter
+  limit: !ref <number_of_epochs>
+
+# ── Logging ───────────────────────────────────────────────────────────────────
+train_logger: !new:speechbrain.utils.train_logger.FileTrainLogger
+  save_file: !ref <train_log>
+
+error_stats: !name:speechbrain.utils.metric_stats.MetricStats
+  metric: !name:speechbrain.nnet.losses.nll_loss
+    reduction: batch
