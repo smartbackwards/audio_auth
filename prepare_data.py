@@ -169,14 +169,13 @@ def build_subset_manifests(speakers: dict, split: dict,
             enroll_rows.append({"speaker_id": spk_id, "wav_path": wav})
         for wav in utts[cfg["n_enroll_utts"]:
                         cfg["n_enroll_utts"] + cfg["n_test_utts"]]:
-            test_rows.append({"speaker_id": spk_id, "wav_path": wav})
+            test_rows.append({"speaker_id": spk_id, "wav_path": wav, "genuine": True})
 
     for spk_id in split["test"]:
         utts = speakers[spk_id].copy()
         random.shuffle(utts)
         for wav in utts[:cfg["n_test_utts"]]:
-            test_rows.append({"speaker_id": spk_id, "wav_path": wav,
-                              "enrolled": False})
+            test_rows.append({"speaker_id": spk_id, "wav_path": wav, "genuine": False})
 
     manifests["enroll"] = enroll_rows
     manifests["test"]   = test_rows
