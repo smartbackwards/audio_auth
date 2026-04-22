@@ -201,9 +201,12 @@ def main():
         valid_set     = valid_loader,
     )
     brain.modules.encoder.eval()
-    torch.save(brain.modules.encoder.state_dict(), "finetuned_encoder.pt")
-    print(f"\n[finetune] Done. Best checkpoint saved to: {hparams['save_folder']}")
-    print("Next step: run enroll.py to build your speaker database.")
+    encoder_path = Path(hparams["output_folder"]) / "finetuned_encoder.pt"
+    torch.save(brain.modules.encoder.state_dict(), encoder_path)
+    print(f"\n[finetune] Done.")
+    print(f"  Encoder weights : {encoder_path}")
+    print(f"  SpeechBrain ckpt: {hparams['save_folder']}")
+    print(f"Next step: python enroll.py --model_dir {encoder_path}")
 
 
 if __name__ == "__main__":

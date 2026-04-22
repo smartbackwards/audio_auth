@@ -35,25 +35,31 @@ DB_PATH      = "speaker_db.json"   # embedding database
 
 def load_model(model_dir: str = None):
     """
-    Loads the fine-tuned ECAPA-TDNN encoder.
-    Falls back to the pretrained HuggingFace checkpoint if no local model given.
+    Loads the ECAPA-TDNN encoder.
+
+    --model_dir can be:
+      - A .pt file produced by finetune.py (e.g. results/ecapa_finetuned/finetuned_encoder.pt)
+        → loads pretrained model then overrides encoder weights with the fine-tuned state dict
+      - Omitted / not found
+        → uses the pretrained HuggingFace checkpoint as-is
     """
     from speechbrain.pretrained import EncoderClassifier
 
+    model = EncoderClassifier.from_hparams(
+        source   = "speechbrain/spkrec-ecapa-voxceleb",
+        savedir  = "pretrained_models/ecapa",
+        run_opts = {"device": "cpu"},
+    )
+
     if model_dir and Path(model_dir).exists():
-        print(f"[enroll] Loading fine-tuned model from {model_dir}")
-        model = EncoderClassifier.from_hparams(
-            source  = model_dir,
-            savedir = model_dir,
-            run_opts= {"device": "cpu"},
-        )
+        if model_dir.endswith(".pt"):
+            print(f"[enroll] Loading fine-tuned weights from {model_dir}")
+            state = torch.load(model_dir, map_location="cpu")
+            model.mods.embedding_model.load_state_dict(state)
+        else:
+            print(f"[enroll] --model_dir '{model_dir}' is not a .pt file — using pretrained weights.")
     else:
-        print("[enroll] No fine-tuned model found — using pretrained checkpoint.")
-        model = EncoderClassifier.from_hparams(
-            source  = "speechbrain/spkrec-ecapa-voxceleb",
-            savedir = "pretrained_models/ecapa",
-            run_opts= {"device": "cpu"},
-        )
+        print("[enroll] No fine-tuned model — using pretrained checkpoint.")
 
     model.eval()
     return model
