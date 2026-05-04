@@ -1,1 +1,16 @@
 voxceleb1
+# Generated model artifacts / checkpoints
+results/ecapa_finetuned/
+pretrained_models/
+*.ckpt
+*.pt
+*.pth
+*.npy
+
+# Generated speaker database
+speaker_db.json
+speaker_db_centroids.npy
+
+# Python cache
+__pycache__/
+*.pyc

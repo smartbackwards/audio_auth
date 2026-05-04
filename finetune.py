@@ -83,8 +83,9 @@ class VoxDataset(torch.utils.data.Dataset):
 
 def collate_fn(batch):
     wavs, labels = zip(*batch)
-    wavs   = torch.stack(wavs)        # (B, T)
-    labels = torch.tensor(labels)     # (B,)
+    wavs   = torch.stack(wavs)                      # (B, T)
+    labels = torch.tensor(labels, dtype=torch.long) # (B,)
+    labels = labels.unsqueeze(1)                    # (B, 1), expected by SpeechBrain loss
     return wavs, labels
 
 
@@ -95,18 +96,24 @@ class SpeakerBrain(sb.Brain):
     def compute_forward(self, batch, stage):
         wavs, labels = batch
         wavs = wavs.to(self.device)
+        labels = labels.to(self.device)
 
         # Feature extraction
         feats = self.modules.compute_features(wavs)       # (B, T, 80)
-        feats = self.modules.mean_var_norm(feats, torch.ones(feats.shape[0], device=self.device))
+        feats = self.modules.mean_var_norm(
+            feats,
+            torch.ones(feats.shape[0], device=self.device),
+        )
 
-        # Embedding
+        # Embedding + speaker classification head
         embeddings = self.modules.encoder(feats)          # (B, emb_dim)
-        return embeddings, labels.to(self.device)
+        logits = self.modules.classifier(embeddings)      # (B, n_speakers)
+
+        return logits, labels
 
     def compute_objectives(self, predictions, batch, stage):
-        embeddings, labels = predictions
-        loss = self.hparams.classifier(embeddings, labels)
+        logits, labels = predictions
+        loss = self.hparams.classifier(logits, labels)
         return loss
 
     def on_stage_end(self, stage, stage_loss, epoch):
@@ -170,7 +177,7 @@ def main():
     pretrained = EncoderClassifier.from_hparams(
         source      = hparams["pretrained_path"],
         savedir     = "pretrained_models/ecapa",
-        run_opts    = {"device": "cuda" if torch.cuda.is_available() else "cpu"},
+        run_opts    = {"device": "cuda:0" if torch.cuda.is_available() else "cpu"},
     )
 
     # Transfer encoder weights
@@ -191,7 +198,7 @@ def main():
         modules     = modules,
         opt_class   = hparams["opt_class"],
         hparams     = hparams,
-        run_opts    = {"device": "cuda" if torch.cuda.is_available() else "cpu"},
+        run_opts    = {"device": "cuda:0" if torch.cuda.is_available() else "cpu"},
         checkpointer= hparams["checkpointer"],
     )
 
