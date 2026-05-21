@@ -6,6 +6,8 @@ pretrained_models/
 *.pt
 *.pth
 *.npy
+UrbanSound8K
+
 
 # Generated speaker database
 speaker_db.json

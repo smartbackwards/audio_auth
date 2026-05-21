@@ -1,0 +1,19 @@
+Experiment 7 - Room Reverberation (RIR Convolution)
+==================================================
+Baseline EER (Exp 1): 0.0329 (3.29%)
+
+RT60 bin: medium  (0.3–0.7 s,  avg RT60=0.344 s)
+  Trials       : 100 genuine, 100 impostor
+  EER          : 0.0750 (7.50%)  delta vs baseline: +4.21pp
+  EER threshold: 0.5716
+  FAR@FRR=1%   : 0.0800 (8.00%)
+  FRR@FAR=1%   : 0.8700 (87.00%)
+  Avg latency  : 386.9 ms
+
+RT60 bin: long  (0.7–∞ s,  avg RT60=1.709 s)
+  Trials       : 100 genuine, 100 impostor
+  EER          : 0.0400 (4.00%)  delta vs baseline: +0.71pp
+  EER threshold: 0.5485
+  FAR@FRR=1%   : 0.0400 (4.00%)
+  FRR@FAR=1%   : 0.9200 (92.00%)
+  Avg latency  : 417.9 ms

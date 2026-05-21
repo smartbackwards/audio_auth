@@ -28,10 +28,10 @@ import torchaudio
 from pathlib import Path
 from tqdm import tqdm
 
-from enroll import load_model, load_db, preprocess_wav, get_embedding, compute_speaker_centroid
+from enroll import load_model, load_db, preprocess_wav, get_embedding, compute_speaker_centroid, FINETUNED_PT
 
 # ── Config ─────────────────────────────────────────────────────────────────────
-DEFAULT_THRESHOLD = 0.25   # cosine distance threshold (tune via ROC analysis)
+DEFAULT_THRESHOLD = 0.54    # cosine distance threshold at EER (clean 35-speaker VoxCeleb1-O test set)
 DB_PATH           = "speaker_db.json"
 
 
@@ -228,7 +228,7 @@ def batch_test(model, db: dict, manifest_path: str, output_path: str,
     frr = fn / (fn + tp + 1e-8)
     acc = (tp + tn) / len(results)
 
-    print(f"\n── Quick summary (threshold={threshold:.3f}) ──")
+    print(f"\n-- Quick summary (threshold={threshold:.3f}) --")
     print(f"  Accuracy : {acc:.4f}")
     print(f"  FAR      : {far:.4f}  (False Accept Rate)")
     print(f"  FRR      : {frr:.4f}  (False Reject Rate)")
@@ -245,14 +245,14 @@ def main():
     v = subparsers.add_parser("verify")
     v.add_argument("--speaker_id",  required=True)
     v.add_argument("--audio_path",  required=True)
-    v.add_argument("--model_dir",   default=None)
+    v.add_argument("--model_dir",   default=FINETUNED_PT)
     v.add_argument("--db_path",     default=DB_PATH)
     v.add_argument("--threshold",   type=float, default=DEFAULT_THRESHOLD)
 
     # Identify
     i = subparsers.add_parser("identify")
     i.add_argument("--audio_path",  required=True)
-    i.add_argument("--model_dir",   default=None)
+    i.add_argument("--model_dir",   default=FINETUNED_PT)
     i.add_argument("--db_path",     default=DB_PATH)
     i.add_argument("--threshold",   type=float, default=DEFAULT_THRESHOLD)
 
@@ -260,7 +260,7 @@ def main():
     b = subparsers.add_parser("batch_test")
     b.add_argument("--manifest",    required=True)
     b.add_argument("--output",      required=True)
-    b.add_argument("--model_dir",   default=None)
+    b.add_argument("--model_dir",   default=FINETUNED_PT)
     b.add_argument("--db_path",     default=DB_PATH)
     b.add_argument("--threshold",   type=float, default=DEFAULT_THRESHOLD)
     b.add_argument("--mode",        default="verify", choices=["verify", "identify"])
@@ -272,17 +272,17 @@ def main():
 
     if args.command == "verify":
         result = verify(model, db, args.speaker_id, args.audio_path, args.threshold)
-        verdict = "✅ ACCEPTED" if result["accepted"] else "❌ REJECTED"
+        verdict = "ACCEPTED" if result["accepted"] else "REJECTED"
         print(f"\n{verdict}  |  distance={result['distance']:.4f}  |  "
               f"threshold={result['threshold']:.4f}  |  latency={result['latency_ms']:.1f}ms")
 
     elif args.command == "identify":
         result = identify(model, db, args.audio_path, args.threshold)
         if result["accepted"]:
-            print(f"\n✅ Identified: {result['display_name']} ({result['speaker_id']})  "
+            print(f"\nIdentified: {result['display_name']} ({result['speaker_id']})  "
                   f"|  distance={result['distance']:.4f}  |  latency={result['latency_ms']:.1f}ms")
         else:
-            print(f"\n❓ Unknown speaker  |  best distance={result['distance']:.4f}  "
+            print(f"\nUnknown speaker  |  best distance={result['distance']:.4f}  "
                   f"|  latency={result['latency_ms']:.1f}ms")
 
     elif args.command == "batch_test":

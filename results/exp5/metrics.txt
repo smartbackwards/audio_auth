@@ -1,0 +1,27 @@
+Experiment 5 - Environmental Background Noise
+==================================================
+Baseline EER (Exp 1): 0.0329 (3.29%)
+
+SNR = 20 dB
+  Trials       : 233 genuine, 233 impostor
+  EER          : 0.0215 (2.15%)  delta vs baseline: -1.14pp
+  EER threshold: 0.5864
+  FAR@FRR=1%   : 0.0215 (2.15%)
+  FRR@FAR=1%   : 0.7339 (73.39%)
+  Avg latency  : 289.7 ms
+
+SNR = 10 dB
+  Trials       : 233 genuine, 233 impostor
+  EER          : 0.0258 (2.58%)  delta vs baseline: -0.71pp
+  EER threshold: 0.6173
+  FAR@FRR=1%   : 0.0343 (3.43%)
+  FRR@FAR=1%   : 0.8841 (88.41%)
+  Avg latency  : 291.4 ms
+
+SNR = 0 dB
+  Trials       : 233 genuine, 233 impostor
+  EER          : 0.0472 (4.72%)  delta vs baseline: +1.44pp
+  EER threshold: 0.7209
+  FAR@FRR=1%   : 0.1373 (13.73%)
+  FRR@FAR=1%   : 0.8627 (86.27%)
+  Avg latency  : 294.0 ms

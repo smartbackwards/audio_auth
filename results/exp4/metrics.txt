@@ -1,0 +1,27 @@
+Experiment 4 - Additive White Gaussian Noise
+==================================================
+Baseline EER (Exp 1): 0.0329 (3.29%)
+
+SNR = 40 dB
+  Trials       : 233 genuine, 233 impostor
+  EER          : 0.0215 (2.15%)  delta vs baseline: -1.14pp
+  EER threshold: 0.5774
+  FAR@FRR=1%   : 0.0215 (2.15%)
+  FRR@FAR=1%   : 0.7253 (72.53%)
+  Avg latency  : 280.3 ms
+
+SNR = 20 dB
+  Trials       : 233 genuine, 233 impostor
+  EER          : 0.0258 (2.58%)  delta vs baseline: -0.71pp
+  EER threshold: 0.6227
+  FAR@FRR=1%   : 0.0300 (3.00%)
+  FRR@FAR=1%   : 0.9099 (90.99%)
+  Avg latency  : 283.3 ms
+
+SNR = 10 dB
+  Trials       : 233 genuine, 233 impostor
+  EER          : 0.0322 (3.22%)  delta vs baseline: -0.07pp
+  EER threshold: 0.6635
+  FAR@FRR=1%   : 0.0343 (3.43%)
+  FRR@FAR=1%   : 0.6695 (66.95%)
+  Avg latency  : 283.1 ms

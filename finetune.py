@@ -173,11 +173,13 @@ def main():
 
     # Load pretrained weights
     print("[finetune] Loading pretrained ECAPA-TDNN from HuggingFace...")
-    from speechbrain.pretrained import EncoderClassifier
+    from speechbrain.inference.classifiers import EncoderClassifier
+    from speechbrain.utils.fetching import LocalStrategy
     pretrained = EncoderClassifier.from_hparams(
-        source      = hparams["pretrained_path"],
-        savedir     = "pretrained_models/ecapa",
-        run_opts    = {"device": "cuda:0" if torch.cuda.is_available() else "cpu"},
+        source         = hparams["pretrained_path"],
+        savedir        = "pretrained_models/ecapa",
+        run_opts       = {"device": "cuda:0" if torch.cuda.is_available() else "cpu"},
+        local_strategy = LocalStrategy.COPY,
     )
 
     # Transfer encoder weights

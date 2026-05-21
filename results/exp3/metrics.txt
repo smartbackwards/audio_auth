@@ -1,0 +1,57 @@
+Experiment 3 — Downsampling
+==================================================
+Baseline EER (Exp 1): 0.0329 (3.29%)
+
+Method: NAIVE
+------------------------------
+  Downsample x2  (effective BW: 4.0 kHz)
+    Trials       : 116 genuine, 116 impostor
+    EER          : 0.0690 (6.90%)  delta vs baseline: +3.61pp
+    EER threshold: 0.6857
+    FAR@FRR=1%   : 0.0690 (6.90%)
+    FRR@FAR=1%   : 0.9483 (94.83%)
+    Avg latency  : 266.0 ms
+
+  Downsample x5  (effective BW: 1.6 kHz)
+    Trials       : 116 genuine, 116 impostor
+    EER          : 0.1552 (15.52%)  delta vs baseline: +12.23pp
+    EER threshold: 0.8504
+    FAR@FRR=1%   : 0.6293 (62.93%)
+    FRR@FAR=1%   : 0.9569 (95.69%)
+    Avg latency  : 278.5 ms
+
+  Downsample x10  (effective BW: 0.8 kHz)
+    Trials       : 116 genuine, 116 impostor
+    EER          : 0.2471 (24.71%)  delta vs baseline: +21.43pp
+    EER threshold: 0.9014
+    FAR@FRR=1%   : 0.9483 (94.83%)
+    FRR@FAR=1%   : 1.0000 (100.00%)
+    Avg latency  : 283.4 ms
+
+
+Method: PROPER
+------------------------------
+  Downsample x2  (effective BW: 4.0 kHz)
+    Trials       : 116 genuine, 116 impostor
+    EER          : 0.0172 (1.72%)  delta vs baseline: -1.56pp
+    EER threshold: 0.7323
+    FAR@FRR=1%   : 0.0172 (1.72%)
+    FRR@FAR=1%   : 0.8448 (84.48%)
+    Avg latency  : 294.5 ms
+
+  Downsample x5  (effective BW: 1.6 kHz)
+    Trials       : 116 genuine, 116 impostor
+    EER          : 0.1121 (11.21%)  delta vs baseline: +7.92pp
+    EER threshold: 0.8661
+    FAR@FRR=1%   : 0.7069 (70.69%)
+    FRR@FAR=1%   : 0.9914 (99.14%)
+    Avg latency  : 287.4 ms
+
+  Downsample x10  (effective BW: 0.8 kHz)
+    Trials       : 116 genuine, 116 impostor
+    EER          : 0.2328 (23.28%)  delta vs baseline: +19.99pp
+    EER threshold: 0.8931
+    FAR@FRR=1%   : 0.7241 (72.41%)
+    FRR@FAR=1%   : 0.8362 (83.62%)
+    Avg latency  : 286.9 ms
+

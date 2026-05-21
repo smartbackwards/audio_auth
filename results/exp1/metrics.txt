@@ -1,0 +1,16 @@
+Experiment 1 — Baseline
+========================
+Genuine trials  : 700
+Impostor trials : 700
+
+EER             : 0.0329  (3.29%)  @ threshold 0.5416
+
+Operating point (threshold=0.401):
+  FAR           : 0.0243  (2.43%)
+  FRR           : 0.3714  (37.14%)
+  Accuracy      : 0.8021  (80.21%)
+
+FAR @ FRR=1%    : 0.0357  (3.57%)
+FRR @ FAR=1%    : 0.7571  (75.71%)
+
+Avg latency     : 303.6 ms

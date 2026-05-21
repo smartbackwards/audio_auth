@@ -1,0 +1,72 @@
+Experiment 6 - Lossy Codec Compression
+==================================================
+Baseline EER (Exp 1): 0.0329 (3.29%)
+
+Codec: MP3
+   32 kbps
+    Trials       : 100 genuine, 100 impostor
+    EER          : 0.0700 (7.00%)  delta vs baseline: +3.71pp
+    EER threshold: 0.5390
+    FAR@FRR=1%   : 0.0800 (8.00%)
+    FRR@FAR=1%   : 0.8000 (80.00%)
+    Avg latency  : 1084.6 ms
+   64 kbps
+    Trials       : 100 genuine, 100 impostor
+    EER          : 0.0400 (4.00%)  delta vs baseline: +0.71pp
+    EER threshold: 0.5278
+    FAR@FRR=1%   : 0.0400 (4.00%)
+    FRR@FAR=1%   : 0.9300 (93.00%)
+    Avg latency  : 946.5 ms
+  128 kbps
+    Trials       : 100 genuine, 100 impostor
+    EER          : 0.0500 (5.00%)  delta vs baseline: +1.71pp
+    EER threshold: 0.5459
+    FAR@FRR=1%   : 0.0500 (5.00%)
+    FRR@FAR=1%   : 0.9100 (91.00%)
+    Avg latency  : 946.4 ms
+
+Codec: AAC
+   32 kbps
+    Trials       : 100 genuine, 100 impostor
+    EER          : 0.0500 (5.00%)  delta vs baseline: +1.71pp
+    EER threshold: 0.5561
+    FAR@FRR=1%   : 0.0500 (5.00%)
+    FRR@FAR=1%   : 0.9200 (92.00%)
+    Avg latency  : 1017.2 ms
+   64 kbps
+    Trials       : 100 genuine, 100 impostor
+    EER          : 0.0400 (4.00%)  delta vs baseline: +0.71pp
+    EER threshold: 0.5050
+    FAR@FRR=1%   : 0.0500 (5.00%)
+    FRR@FAR=1%   : 0.8700 (87.00%)
+    Avg latency  : 1123.1 ms
+  128 kbps
+    Trials       : 100 genuine, 100 impostor
+    EER          : 0.0600 (6.00%)  delta vs baseline: +2.71pp
+    EER threshold: 0.5005
+    FAR@FRR=1%   : 0.0600 (6.00%)
+    FRR@FAR=1%   : 0.9600 (96.00%)
+    Avg latency  : 1166.0 ms
+
+Codec: OPUS
+    8 kbps
+    Trials       : 100 genuine, 100 impostor
+    EER          : 0.0400 (4.00%)  delta vs baseline: +0.71pp
+    EER threshold: 0.7397
+    FAR@FRR=1%   : 0.1300 (13.00%)
+    FRR@FAR=1%   : 0.8900 (89.00%)
+    Avg latency  : 882.5 ms
+   16 kbps
+    Trials       : 100 genuine, 100 impostor
+    EER          : 0.0250 (2.50%)  delta vs baseline: -0.79pp
+    EER threshold: 0.5571
+    FAR@FRR=1%   : 0.0200 (2.00%)
+    FRR@FAR=1%   : 0.7100 (71.00%)
+    Avg latency  : 606.7 ms
+   32 kbps
+    Trials       : 100 genuine, 100 impostor
+    EER          : 0.0300 (3.00%)  delta vs baseline: -0.29pp
+    EER threshold: 0.5506
+    FAR@FRR=1%   : 0.0300 (3.00%)
+    FRR@FAR=1%   : 0.7600 (76.00%)
+    Avg latency  : 612.9 ms

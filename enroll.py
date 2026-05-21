@@ -20,6 +20,7 @@ import json
 import argparse
 import torch
 import torchaudio
+import soundfile as sf
 import numpy as np
 from pathlib import Path
 from tqdm import tqdm
@@ -33,7 +34,10 @@ DB_PATH      = "speaker_db.json"   # embedding database
 
 # ── Model loading ──────────────────────────────────────────────────────────────
 
-def load_model(model_dir: str = None):
+FINETUNED_PT = None
+
+
+def load_model(model_dir: str = FINETUNED_PT):
     """
     Loads the ECAPA-TDNN encoder.
 
@@ -43,12 +47,14 @@ def load_model(model_dir: str = None):
       - Omitted / not found
         → uses the pretrained HuggingFace checkpoint as-is
     """
-    from speechbrain.pretrained import EncoderClassifier
+    from speechbrain.inference.classifiers import EncoderClassifier
+    from speechbrain.utils.fetching import LocalStrategy
 
     model = EncoderClassifier.from_hparams(
-        source   = "speechbrain/spkrec-ecapa-voxceleb",
-        savedir  = "pretrained_models/ecapa",
-        run_opts = {"device": "cpu"},
+        source         = "speechbrain/spkrec-ecapa-voxceleb",
+        savedir        = "pretrained_models/ecapa",
+        run_opts       = {"device": "cpu"},
+        local_strategy = LocalStrategy.COPY,
     )
 
     if model_dir and Path(model_dir).exists():
@@ -73,7 +79,8 @@ def preprocess_wav(wav_path: str, sample_rate: int = SAMPLE_RATE,
     Loads, resamples, mono-mixes and centre-crops a wav file.
     Returns a (1, T) tensor ready for the encoder.
     """
-    wav, sr = torchaudio.load(wav_path)
+    data, sr = sf.read(wav_path, dtype="float32", always_2d=True)
+    wav = torch.from_numpy(data.T)  # (channels, T)
 
     if sr != sample_rate:
         wav = torchaudio.functional.resample(wav, sr, sample_rate)
@@ -130,7 +137,7 @@ def save_db(db: dict, db_path: str = DB_PATH):
         }
     with open(db_path, "w") as f:
         json.dump(serialisable, f)
-    print(f"[enroll] DB saved: {len(db)} speakers → {db_path}")
+    print(f"[enroll] DB saved: {len(db)} speakers -> {db_path}")
 
 
 def add_speaker(db: dict, speaker_id: str, display_name: str,

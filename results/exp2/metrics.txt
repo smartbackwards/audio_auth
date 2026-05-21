@@ -1,0 +1,27 @@
+Experiment 2 — Amplitude Scaling
+========================================
+Baseline EER (Exp 1): 0.0329 (3.29%)
+
+Scale factor 25.0  (×25 (loud/clip))
+  Trials      : 244 genuine, 210 impostor
+  EER         : 0.0528 (5.28%)  Δ vs baseline: +2.00pp
+  EER threshold: 0.7142
+  FAR@FRR=1%  : 0.1000 (10.00%)
+  FRR@FAR=1%  : 0.9795 (97.95%)
+  Avg latency : 321.5 ms
+
+Scale factor 1.0  (×1 (unchanged))
+  Trials      : 215 genuine, 259 impostor
+  EER         : 0.0386 (3.86%)  Δ vs baseline: +0.58pp
+  EER threshold: 0.5256
+  FAR@FRR=1%  : 0.0386 (3.86%)
+  FRR@FAR=1%  : 0.9349 (93.49%)
+  Avg latency : 324.4 ms
+
+Scale factor 0.04  (×0.04 (quiet))
+  Trials      : 241 genuine, 231 impostor
+  EER         : 0.0216 (2.16%)  Δ vs baseline: -1.12pp
+  EER threshold: 0.5520
+  FAR@FRR=1%  : 0.0303 (3.03%)
+  FRR@FAR=1%  : 0.7427 (74.27%)
+  Avg latency : 320.3 ms
